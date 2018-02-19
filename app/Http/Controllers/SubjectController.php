@@ -196,7 +196,7 @@ class SubjectController extends Controller
                 'message' => 'File does not belong to this subject'
             ], 404);
         } else {
-            $path = storage_path('app\\files\\').$file->subject_id.'\\'.$file->file;
+            $path = storage_path('app/files/').$file->subject_id.'/'.$file->file;
  
             return response()->download($path, $file->name);
         }
