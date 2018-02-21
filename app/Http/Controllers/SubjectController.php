@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Storage;
 use App\Subject;
 use App\Message;
 use App\File;
@@ -151,16 +150,10 @@ class SubjectController extends Controller
             ], 400);
         }
 
-        $path = $params['file']->store(
-            $params['subject_id'], 'local'
-        );
-
-        $path = explode('/', $path);
-
         $file = new File([
             'subject_id' => $params['subject_id'],
             'name' => $params['file']->getClientOriginalName(),
-            'file' => $path[1]
+            'file' => $params['file']->store('')
         ]);
         $file->save();
 
@@ -168,38 +161,6 @@ class SubjectController extends Controller
             'status' => true,
             'message' => 'File was successfully added'
         ], 200);
-    }
-
-    public function getFile(Request $request, $subjectId, $fileId)
-    {
-        $params['subject_id'] = $subjectId;
-        $params['file_id'] = $fileId;
-
-        $validator = Validator::make($params, [
-            'subject_id' => 'required|integer|exists:subjects,id',
-            'file_id' => 'required|integer|exists:files,id'
-        ]);
-
-        if ($validator->fails()) {
-            $errors = $validator->errors();
-            return response()->json([
-                'status' => false,
-                'message' => $errors->all()
-            ], 400);
-        }
-
-        $file = File::find($params['file_id']);
-
-        if ($file->subject->id !== (int) $params['subject_id']) {
-            return response()->json([
-                'status' => false,
-                'message' => 'File does not belong to this subject'
-            ], 404);
-        } else {
-            $path = storage_path('app/files/').$file->subject_id.'/'.$file->file;
- 
-            return response()->download($path, $file->name);
-        }
     }
 
     public function editFile(Request $request, $subjectId, $fileId)
@@ -266,8 +227,6 @@ class SubjectController extends Controller
             ], 404);
         } else {
             $file->delete();
-
-            Storage::disk('local')->delete($params['subject_id'].'/'.$file->file);
 
             return response()->json([
                 'status' => true,

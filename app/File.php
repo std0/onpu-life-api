@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class File
@@ -21,6 +22,10 @@ class File extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'url'
+    ];
+
     protected $hidden = [
         'subject_id',
         'file'
@@ -35,5 +40,16 @@ class File extends Model
     {
         $this->name = $name;
         return $this->save();
+    }
+
+    public function getUrlAttribute()
+    {
+        return asset('storage/' . $this->file);
+    }
+
+    public function delete()
+    {
+        parent::delete();
+        Storage::delete($this->file);
     }
 }

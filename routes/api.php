@@ -35,5 +35,4 @@ Route::middleware('auth:api')->group(function () {
     });
 
     Route::get('subject/{subjectId}/files', 'SubjectController@getFiles');
-    Route::get('subject/{subjectId}/file/{fileId}', 'SubjectController@getFile');
 });
