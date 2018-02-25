@@ -33,8 +33,12 @@ ONPU Life API requires [PHP](http://php.net/downloads.php) v7.0+ to run. To inst
    ```sh
    $ php artisan migrate
    ```
-9. Install the [nginx](https://nginx.org/en/download.html) web server.
-10. Replace the contents of nginx configuration file (vhost.conf) with the following:
+9. Generate the encryption keys for Laravel Passport.
+   ```sh
+   $ php artisan passport:keys
+   ```
+10. Install the [nginx](https://nginx.org/en/download.html) web server.
+11. Replace the contents of nginx configuration file (vhost.conf) with the following:
     ```nginx
     server {
         listen 80;
@@ -70,8 +74,8 @@ ONPU Life API requires [PHP](http://php.net/downloads.php) v7.0+ to run. To inst
         }
     }
     ```
-11. Restart the nginx.
+12. Restart the nginx.
     ```sh
     $ sudo systemctl restart nginx
     ```
-12. Now you can visit the <http://{domain}> to check if the project was successfully installed.
+13. Now you can visit the <http://{domain}> to check if the project was successfully installed.
